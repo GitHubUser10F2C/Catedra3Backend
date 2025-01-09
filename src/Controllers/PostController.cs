@@ -53,17 +53,17 @@ namespace backend.src.Controllers
             catch (ArgumentException ex)
             {
                 // Errores de validación de la imagen
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message});
             }
             catch (InvalidOperationException ex)
             {
                 // Error de carga en Cloudinary
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new { message = ex.Message});
             }
             catch (KeyNotFoundException ex)
             {
                 // El usuario no se encuentra
-                return NotFound(ex.Message);
+                return NotFound(new { message = ex.Message});
             }
         }
 
@@ -81,7 +81,7 @@ namespace backend.src.Controllers
             var post = await _postRepository.GetById(id);
             if (post == null)
             {
-                return NotFound($"Post with id {id} not found.");
+                return NotFound(new { message = $"Post with id {id} not found."});
             }
 
             return Ok(post);

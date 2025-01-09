@@ -36,12 +36,10 @@ namespace backend.src.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
         {
-
-            // Validar que el correo electrónico no exista
             var existingUserByEmail = await _userRepository.GetByEmail(registerDto.Email);
             if (existingUserByEmail != null)
             {
-                return BadRequest("Email already registered.");
+                return BadRequest(new { message = "Email already registered."});
             }
 
             var user = new AppUser
@@ -54,10 +52,10 @@ namespace backend.src.Controllers
 
             if (result.Succeeded)
             {
-                return Ok("User registered successfully.");
+                return Ok(new { message = "User registered successfully."});
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(new { message = "User registration failed.", errors = result.Errors });
         }
 
         /// <summary>
@@ -73,13 +71,13 @@ namespace backend.src.Controllers
             var user = await _userRepository.GetByEmail(loginDto.Email);
             if (user == null)
             {
-                return Unauthorized("Incorrect email or password.");
+                return Unauthorized(new { message = "Incorrect email or password." });
             }
 
             var isPasswordValid = await _userRepository.CheckPassword(user, loginDto.Password);
             if (!isPasswordValid)
             {
-                return Unauthorized("Incorrect password or email.");
+                return Unauthorized(new { message = "Incorrect password or email." });
             }
 
             var token = GenerateJwtToken(user);
