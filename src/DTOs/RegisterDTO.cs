@@ -13,7 +13,7 @@ namespace backend.src.DTOs
         public required string Email { get; set; }
         [Required]
         [StringLength(32, MinimumLength = 6, ErrorMessage = "The password must be between 6 and 32 characters.")]
-        [RegularExpression(@"^(?=.*\d).{6,32}$", ErrorMessage = "The password must contain at least one number.")]
+        [RegularExpression(@"^.*\d.*$", ErrorMessage = "The password must contain at least one number.")]
         public required string Password { get; set; }
     }
 }
